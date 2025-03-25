@@ -1,5 +1,6 @@
 import axios from "axios";
 import {TicketMasterEvent, RawTicketmasterEvent, FormValues} from "../types";
+import {getDateRange} from "@/utils/dateUtils";
 
 const translateEvents = (
 	events: RawTicketmasterEvent[]
@@ -38,12 +39,14 @@ export const getEvents = async (
 	const baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json";
 	const apiKey = process.env.NEXT_PUBLIC_TICKETMASTER_API_KEY;
 
+	const {startDate, endDate} = getDateRange(formData.date);
+
 	const params = {
 		apikey: apiKey,
 		classificationName: formData.type,
 		stateCode: formData.location,
-		startDateTime: "2025-05-15T00:00:00Z",
-		endDateTime: "2025-05-22T23:59:59Z",
+		startDateTime: startDate,
+		endDateTime: endDate,
 	};
 	try {
 		const response = await axios.get(baseUrl, {params});
